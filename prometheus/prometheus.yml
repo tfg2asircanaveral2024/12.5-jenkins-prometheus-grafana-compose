@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+  scrape_timeout: 8s
+
+# configuracion de Alertmanager
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# objetivos de los que obtener datos
+scrape_configs:
+  # el propio Prometheus, en la URL http://localhost:9090/metrics
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  
+  # nuestro servidor Jenkins, en la URL http://servidor-jenkins:8080/prometheus
+  - job_name: "servidor-jenkins"
+    scrape_interval: 2s
+    static_configs:
+      - targets: ["servidor-jenkins:8080"]
+    metrics_path: "/prometheus"

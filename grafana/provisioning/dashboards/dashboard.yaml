@@ -1,0 +1,13 @@
+apiVersion: 1
+
+# configuramos las fuentes de Dashboards
+providers:
+# el único sitio del que nuestro Grafana va a obtener ficheros de definición de Dashboards es la ruta /var/lib/grafana/dashboards
+- name: 'default'
+  orgId: 1
+  folder: ''
+  type: file
+  disableDeletion: true
+  editable: false
+  options:
+    path: /var/lib/grafana/dashboards

@@ -1,0 +1,44 @@
+# Una imagen de Jenkins configurada automáticamente con JCasC, con los plugins recomendados por
+# la comunidad instalados, configuraciones básicas de autorización aplicadas, y una pipeline
+# definida.
+
+services:
+  servidor-jenkins:
+    image: tfg2asircanaveral2024/jenkins:jcasc-prometheus
+    ports:
+      - 8080:8080
+    hostname: servidor-jenkins
+    volumes: 
+      - ./jenkins-casc:/var/jenkins_home/jenkins-casc:ro
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins-casc/jenkins-casc.yaml
+      #- JENKINS_NOMBRE_ADMINISTRADOR=nombre-administrador
+      # lógicamente, no deberías escribir la contraseña en texto plano, sino usar una variable de entorno
+      #- JENKINS_PASSWORD_ADMINISTRADOR=${PASSWORD_ADMINISTRADOR}
+    networks:
+      - red-1
+  
+  prometheus:
+    image: prom/prometheus
+    ports: 
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+    networks:
+      - red-1
+    
+  grafana:
+    image: grafana/grafana
+    ports: 
+      - 3000:3000
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    networks: 
+      - red-1
+
+networks:
+  red-1:
+    driver: bridge
